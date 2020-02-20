@@ -2,6 +2,7 @@ from classes import Library
 from utils import get_library_to_signup
 from books import get_books_to_scan
 import time
+from pathlib import Path
 
 def handle(lines):
     num_books, num_libraries, total_days = list(map(int, lines[0].split()))
@@ -61,12 +62,14 @@ def handle(lines):
 
         current_day += 1
 
+        for lib in libraries.values():
+            lib.books = lib.books.difference(newly_scanned_books)
 
-        if current_day % 1000 == 0 and current_day > 0:
+        if current_day % 100 == 0 and current_day > 0:
             res = []
             non_empty_libs = 0
             for library in ordered_libraries:
-                assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
+                # assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
                 if len(library.books_to_scan) > 0:
                     non_empty_libs += 1
                     res.append(f"{library.id} {len(library.books_to_scan)}")
@@ -77,7 +80,7 @@ def handle(lines):
     res = []
     non_empty_libs = 0
     for library in ordered_libraries:
-        assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
+        # assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
         if len(library.books_to_scan) > 0:
             non_empty_libs += 1
             res.append(f"{library.id} {len(library.books_to_scan)}")
