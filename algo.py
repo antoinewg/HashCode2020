@@ -1,5 +1,6 @@
 from classes import Library
-from utils import get_books_to_scan, get_library_to_signup
+from utils import get_library_to_signup
+from books import get_books_to_scan
 
 def handle(lines):
     num_books, num_libraries, total_days = list(map(int, lines[0].split()))

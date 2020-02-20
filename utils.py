@@ -18,7 +18,3 @@ def get_library_to_signup(libraries, ordered_libraries):
     return ordered_libraries + [not_signed_up[0]]
   
   return ordered_libraries
-
-
-def get_books_to_scan(signed_up_libraries, scanned_books):
-  return {lib.id: lib.books[:lib.num_book_shippable] for lib in signed_up_libraries}
