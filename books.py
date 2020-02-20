@@ -12,4 +12,4 @@ def get_books_to_scan(library, scanned_books):
             book_candidate = library.books_ordered_by_score.popleft()[0]
             if book_candidate in library.books:
                 books_to_scan += [book_candidate]
-    return {library.id: books_to_scan}
+    return books_to_scan

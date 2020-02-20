@@ -41,16 +41,11 @@ def handle(lines):
         for signed_up_library in signed_up_libraries:
             books_to_scan = get_books_to_scan(signed_up_library, newly_scanned_books)
                 
-            for library_books in map(set, books_to_scan.values()):
-                all_scanned_books |= set(library_books) # union
-                newly_scanned_books = newly_scanned_books.union(library_books)
+            library_books = set(books_to_scan)
+            all_scanned_books |= library_books # union
+            newly_scanned_books = newly_scanned_books.union(library_books)
 
-            if len(books_to_scan) > 0:
-                for lib_id in books_to_scan:
-                    books = books_to_scan[lib_id]
-                    library = libraries[lib_id]
-                    library.books_to_scan += books
-                    # print(f"Scanned books {books} for library {lib_id}")
+            signed_up_library.books_to_scan += books_to_scan
 
         if not library_currently_signing_up.signed_up():
             # print(f"[sign up] Signing up {library_currently_signing_up}")
