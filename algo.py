@@ -39,7 +39,7 @@ def handle(lines):
             for lib_id in books_to_scan:
                 books = books_to_scan[lib_id]
                 library = libraries[lib_id]
-                library.books_to_scan = books
+                library.books_to_scan += books
                 print(f"Scanned books {books} for library {lib_id}")
 
         if not library_currently_signing_up.signed_up():
@@ -51,7 +51,7 @@ def handle(lines):
         current_day += 1
 
     res = [str(len(ordered_libraries))]
-    for library_id in ordered_libraries:
+    for library in ordered_libraries:
         res.append(f"{library.id} {len(library.books_to_scan)}")
         res.append(" ".join(list(map(str, library.books_to_scan))))
 
