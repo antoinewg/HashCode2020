@@ -5,7 +5,7 @@ from pathlib import Path
 from subprocess import run
 from sys import argv, exit, stderr
 from threading import Thread
-from algo import *
+from algoh import *
 
 
 def run_input(filename):
