@@ -38,7 +38,7 @@ def handle(lines):
 
         newly_scanned_books = set()
         for signed_up_library in signed_up_libraries:
-            books_to_scan = get_books_to_scan([signed_up_library], newly_scanned_books)
+            books_to_scan = get_books_to_scan(signed_up_library, newly_scanned_books)
                 
             for library_books in map(set, books_to_scan.values()):
                 all_scanned_books |= set(library_books) # union
