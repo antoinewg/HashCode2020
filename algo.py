@@ -9,7 +9,11 @@ def handle(lines):
     libraries = {}
     for i in range(num_libraries):
         _, signup_time, num_book_shippable = list(map(int, lines[2 + 2 * i].split()))
-        books = list(map(int, lines[2 + 2 * i + 1].split()))
+        book_ids = list(map(int, lines[2 + 2 * i + 1].split()))
+        books = {
+            book_id: book_scores[book_id]
+            for book_id in book_ids
+        }
 
         libraries[i] = (Library(i, books, signup_time, num_book_shippable))
 
