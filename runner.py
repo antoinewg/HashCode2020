@@ -12,11 +12,11 @@ def run_input(filename):
     lines = filename.read_text().split("\n")
     res = handle(lines)
 
-    Path(f'output/{str(filename).split("/")[-1]}').write_text("\n".join(res))
+    Path(f'output/{str(filename).split("/")[-1]}').write_text("\n".join(res).strip())
 
 
 def run_inputs():
-    filenames = Path().glob("input/a*.txt")
+    filenames = Path().glob("input/b*.txt")
     Path("output").mkdir(parents=True, exist_ok=True)
     threads = []
     for filename in filenames:
