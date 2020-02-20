@@ -61,14 +61,26 @@ def handle(lines):
 
         current_day += 1
 
-    res = []
-    non_empty_libs = 0
-    for library in ordered_libraries:
-        assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
-        if len(library.books_to_scan) > 0:
-            non_empty_libs += 1
-            res.append(f"{library.id} {len(library.books_to_scan)}")
-            res.append(" ".join(list(map(str, library.books_to_scan))))
-    res = [str(non_empty_libs)] + res
 
+        if current_day % 1000 == 0 and current_day > 0:
+            res = []
+            non_empty_libs = 0
+            for library in ordered_libraries:
+                assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
+                if len(library.books_to_scan) > 0:
+                    non_empty_libs += 1
+                    res.append(f"{library.id} {len(library.books_to_scan)}")
+                    res.append(" ".join(list(map(str, library.books_to_scan))))
+            res = [str(non_empty_libs)] + res
+            Path(f'output/wip.txt').write_text("\n".join(res).strip())
+
+        res = []
+        non_empty_libs = 0
+        for library in ordered_libraries:
+            assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
+            if len(library.books_to_scan) > 0:
+                non_empty_libs += 1
+                res.append(f"{library.id} {len(library.books_to_scan)}")
+                res.append(" ".join(list(map(str, library.books_to_scan))))
+        res = [str(non_empty_libs)] + res
     return res
