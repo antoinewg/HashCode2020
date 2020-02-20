@@ -45,7 +45,7 @@ def handle(lines):
                 all_scanned_books |= set(library_books) # union
                 newly_scanned_books = newly_scanned_books.union(library_books)
 
-            if books_to_scan:
+            if len(books_to_scan) > 0:
                 for lib_id in books_to_scan:
                     books = books_to_scan[lib_id]
                     library = libraries[lib_id]
@@ -61,10 +61,14 @@ def handle(lines):
 
         current_day += 1
 
-    res = [str(len(ordered_libraries))]
+    res = []
+    non_empty_libs = 0
     for library in ordered_libraries:
         assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
-        res.append(f"{library.id} {len(library.books_to_scan)}")
-        res.append(" ".join(list(map(str, library.books_to_scan))))
+        if len(library.books_to_scan) > 0:
+            non_empty_libs += 1
+            res.append(f"{library.id} {len(library.books_to_scan)}")
+            res.append(" ".join(list(map(str, library.books_to_scan))))
+    res = [str(non_empty_libs)] + res
 
     return res
