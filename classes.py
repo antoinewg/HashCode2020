@@ -1,7 +1,14 @@
+from collections import deque
+from operator import itemgetter
+
 class Library:
-  def __init__(self, id, books, signup_time, num_book_shippable):
+  def __init__(self, id, books, signup_time, num_book_shippable, book_scores):
     self.id = id
     self.books = books
+    self.books_ordered_by_score = sorted([
+        (book_id, book_scores[book_id]) 
+        for book_id in books 
+    ], key=itemgetter(1), reverse=True)
     self.signup_time = signup_time
     self.num_book_shippable = num_book_shippable
     self.time_left_to_signup = signup_time

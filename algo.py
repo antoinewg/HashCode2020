@@ -12,7 +12,7 @@ def handle(lines):
         book_ids = list(map(int, lines[2 + 2 * i + 1].split()))
         books = set(book_ids)
 
-        libraries[i] = (Library(i, books, signup_time, num_book_shippable))
+        libraries[i] = (Library(i, books, signup_time, num_book_shippable, book_scores))
 
 
     current_day = 0
@@ -50,8 +50,6 @@ def handle(lines):
         if not library_currently_signing_up.signed_up():
             # print(f" Signing up {library_currently_signing_up}")
             library_currently_signing_up.decrement_sign_up_time()
-        else:
-            # print(" No library to sign up.")
 
         current_day += 1
 
