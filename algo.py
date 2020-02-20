@@ -18,6 +18,7 @@ def handle(lines):
     current_day = 0
     ordered_libraries = []
     newly_scanned_books = set()
+    all_scanned_books = set()
 
     library_currently_signing_up = None
     while current_day < total_days:
@@ -26,8 +27,8 @@ def handle(lines):
         if library_currently_signing_up is None or library_currently_signing_up.signed_up():
             ordered_libraries = get_library_to_signup(
                 libraries.values(),
-                ordered_libraries
-                )
+                ordered_libraries,
+            )
             library_currently_signing_up = ordered_libraries[-1]
         
         
@@ -40,6 +41,7 @@ def handle(lines):
             books_to_scan = get_books_to_scan([signed_up_library], newly_scanned_books)
                 
             for library_books in map(set, books_to_scan.values()):
+                # all_scanned_books |= set(books_to_scan.values())
                 newly_scanned_books = newly_scanned_books.union(library_books)
 
             if books_to_scan:
@@ -60,6 +62,7 @@ def handle(lines):
 
     res = [str(len(ordered_libraries))]
     for library in ordered_libraries:
+        assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
         res.append(f"{library.id} {len(library.books_to_scan)}")
         res.append(" ".join(list(map(str, library.books_to_scan))))
 
