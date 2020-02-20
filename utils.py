@@ -16,3 +16,7 @@ def get_library_to_signup(libraries):
     return not_signed_up[0]
   
   return None
+
+
+def get_books_to_scan(signed_up_libraries, scanned_books):
+  return {lib.id: lib.books[:lib.num_book_shippable] for lib in signed_up_libraries}

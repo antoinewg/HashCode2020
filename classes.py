@@ -6,7 +6,7 @@ class Library:
     self.num_book_shippable = num_book_shippable
     self.time_left_to_signup = signup_time
     self.signing_up = False
-    self.books_to_send = []
+    self.books_to_scan = []
 
   def decrement_sign_up_time(self):
     self.time_left_to_signup -= 1
