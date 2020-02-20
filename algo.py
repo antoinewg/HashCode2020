@@ -22,8 +22,8 @@ def handle(lines):
 
     library_currently_signing_up = None
     while current_day < total_days:
-        if current_day / total_days * 1000 % 10 == 0:
-            print(f"Current day {current_day}/{total_days}.")
+        if current_day % 100 == 0:
+            print(f"Current day {current_day}/{total_days}.", end="\r")
         
         if library_currently_signing_up is None or library_currently_signing_up.signed_up():
             ordered_libraries = get_library_to_signup(
