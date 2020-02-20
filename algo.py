@@ -17,34 +17,36 @@ def handle(lines):
     ordered_libraries = []
     scanned_books = {}
 
+    library_currently_signing_up = None
     while current_day < total_days:
-        msg = f"Current day {current_day}/{total_days}."
+        print(f"Current day {current_day}/{total_days}.")
         
-        library_to_signup = get_library_to_signup(libraries.values())
-        if library_to_signup:
-            ordered_libraries.append(library_to_signup.id)
-            msg += f" Signing up {library_to_signup}"
-            library_to_signup.signing_up = True
-            library_to_signup.decrement_sign_up_time()
-        else:
-            msg += " No library to sign up."
+        if library_currently_signing_up is None or library_currently_signing_up.signed_up():
+            ordered_libraries = get_library_to_signup(
+                libraries.values(),
+                ordered_libraries
+                )
+            library_currently_signing_up = ordered_libraries[-1]
         
-        print(msg)
+        
 
-        signed_up_libraries = [lib for lib in  libraries if lib.signed_up()]
+        signed_up_libraries = [lib for lib in ordered_libraries if lib.signed_up()]
         print(f"{len(signed_up_libraries)} libraries signed up.")
 
         books_to_scan = get_books_to_scan(signed_up_libraries, scanned_books)
 
         if books_to_scan:
-            import ipdb
-        
-            ipdb.set_trace()
             for lib_id in books_to_scan:
                 books = books_to_scan[lib_id]
                 library = libraries[lib_id]
                 library.books_to_scan = books
                 print(f"Scanned books {books} for library {lib_id}")
+
+        if not library_currently_signing_up.signed_up():
+            print(f" Signing up {library_currently_signing_up}")
+            library_currently_signing_up.decrement_sign_up_time()
+        else:
+            print(" No library to sign up.")
 
         current_day += 1
 
