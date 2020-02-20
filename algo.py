@@ -1,6 +1,7 @@
 from classes import Library
 from utils import get_library_to_signup
 from books import get_books_to_scan
+import time
 
 def handle(lines):
     num_books, num_libraries, total_days = list(map(int, lines[0].split()))
@@ -20,10 +21,14 @@ def handle(lines):
     newly_scanned_books = set()
     all_scanned_books = set()
 
+    start_time = time.time()
     library_currently_signing_up = None
     while current_day < total_days:
-        if current_day % 100 == 0:
-            print(f"Current day {current_day}/{total_days}.", end="\r")
+        if current_day % 100 == 0 and current_day > 0:
+            current_time = time.time()
+            remaining_time = (current_time - start_time) / (current_day) * (total_days - current_day)
+
+            print(f"Current day {current_day}/{total_days}. time remaining : {int(remaining_time / 60)} min", end="\r")
         
         if library_currently_signing_up is None or library_currently_signing_up.signed_up():
             ordered_libraries = get_library_to_signup(
