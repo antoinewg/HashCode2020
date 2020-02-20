@@ -16,7 +16,7 @@ def run_input(filename):
 
 
 def run_inputs():
-    filenames = Path().glob("input/*.txt")
+    filenames = Path().glob("input/a*.txt")
     Path("output").mkdir(parents=True, exist_ok=True)
     threads = []
     for filename in filenames:
