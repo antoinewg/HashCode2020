@@ -1,5 +1,5 @@
 def get_library_to_sign_up(libraries):
-  sort_libraries = sorted(libraries, key=lambda x: x.total_score, reverse=True)
+  sort_libraries = sorted(libraries, key=lambda x: x.num_book_shippable * x.total_score / x.signup_time, reverse=True)
   return sort_libraries[0]
 
 
