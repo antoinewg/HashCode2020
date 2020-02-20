@@ -33,7 +33,7 @@ def handle(lines):
         
 
         signed_up_libraries = [lib for lib in ordered_libraries if lib.signed_up()]
-        print(f"{len(signed_up_libraries)} libraries signed up.")
+        # print(f"{len(signed_up_libraries)} libraries signed up.")
 
         books_to_scan = get_books_to_scan(signed_up_libraries, newly_scanned_books)
         newly_scanned_books = set()
@@ -45,13 +45,13 @@ def handle(lines):
                 books = books_to_scan[lib_id]
                 library = libraries[lib_id]
                 library.books_to_scan += books
-                print(f"Scanned books {books} for library {lib_id}")
+                # print(f"Scanned books {books} for library {lib_id}")
 
         if not library_currently_signing_up.signed_up():
-            print(f" Signing up {library_currently_signing_up}")
+            # print(f" Signing up {library_currently_signing_up}")
             library_currently_signing_up.decrement_sign_up_time()
         else:
-            print(" No library to sign up.")
+            # print(" No library to sign up.")
 
         current_day += 1
 
