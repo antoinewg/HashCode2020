@@ -15,8 +15,8 @@ def run_input(filename):
     Path(f'output/{str(filename).split("/")[-1]}').write_text("\n".join(res).strip())
 
 
-def run_inputs():
-    filenames = Path().glob("input/b*.txt")
+def run_inputs(pattern):
+    filenames = Path().glob(f"input/{pattern}.txt")
     Path("output").mkdir(parents=True, exist_ok=True)
     threads = []
     for filename in filenames:
@@ -29,4 +29,8 @@ def run_inputs():
 
 
 if __name__ == "__main__":
-    run_inputs()
+    if len(argv) > 1:
+        patterns = argv[1]
+    else:
+        patterns = "a*"
+    run_inputs(patterns)
