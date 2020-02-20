@@ -2,3 +2,4 @@ __pycache__
 runner.py
 *.swp
 output/*
+.DS_Store
