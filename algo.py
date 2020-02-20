@@ -10,17 +10,14 @@ def handle(lines):
     for i in range(num_libraries):
         _, signup_time, num_book_shippable = list(map(int, lines[2 + 2 * i].split()))
         book_ids = list(map(int, lines[2 + 2 * i + 1].split()))
-        books = {
-            book_id: book_scores[book_id]
-            for book_id in book_ids
-        }
+        books = set(book_ids)
 
         libraries[i] = (Library(i, books, signup_time, num_book_shippable))
 
 
     current_day = 0
     ordered_libraries = []
-    scanned_books = {}
+    newly_scanned_books = set()
 
     library_currently_signing_up = None
     while current_day < total_days:
@@ -38,7 +35,10 @@ def handle(lines):
         signed_up_libraries = [lib for lib in ordered_libraries if lib.signed_up()]
         print(f"{len(signed_up_libraries)} libraries signed up.")
 
-        books_to_scan = get_books_to_scan(signed_up_libraries, scanned_books)
+        books_to_scan = get_books_to_scan(signed_up_libraries, newly_scanned_books)
+        newly_scanned_books = set()
+        for library_books in map(set, books_to_scan.values()):
+            newly_scanned_books = newly_scanned_books.union(library_books)
 
         if books_to_scan:
             for lib_id in books_to_scan:
