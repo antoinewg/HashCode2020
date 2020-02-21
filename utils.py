@@ -26,4 +26,14 @@ def get_library_to_signup(libraries, ordered_libraries):
   return ordered_libraries
 
 def get_best_library(libraries, days_left):
-    raise NotFoundError("`get_best_library` not implemented")
+
+    if len(libraries) == 0:
+        raise NotFoundError("No more libraries")
+
+    # TODO : sort libraries by ?
+    best_library = libraries[0]
+
+    if best_library.signup_time >= days_left:
+        raise NotFoundError("No library to signup in the remaining time")
+
+    return best_library, 0

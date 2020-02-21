@@ -8,108 +8,52 @@ def handle(lines):
     num_books, num_libraries, total_days = list(map(int, lines[0].split()))
     book_scores = list(map(int, lines[1].split()))
 
-    libraries = {}
+    libraries_to_signup = []
     for i in range(num_libraries):
         _, signup_time, num_book_shippable = list(map(int, lines[2 + 2 * i].split()))
         book_ids = list(map(int, lines[2 + 2 * i + 1].split()))
         books = set(book_ids)
 
-        libraries[i] = (Library(i, books, signup_time, num_book_shippable, book_scores))
+        libraries_to_signup += [Library(i, books, signup_time, num_book_shippable, book_scores)]
 
 
-    current_day = 0
+    remaining_days = total_days
+    checkpoint_steps = 10
+    next_checkpoint = remaining_days - checkpoint_steps
     scanned_libraries = []
-    while current_day < total_days :
+    start_time = time.time()
+    while remaining_days > 0 :
+        if remaining_days < next_checkpoint:
+            seconds_left = (time.time() - start_time) / (total_days - remaining_days) * remaining_days
+            print(f"Remaining days: {remaining_days}. Minutes left : {seconds_left / 60}", end="\r")
+            next_checkpoint -= checkpoint_steps
         # get best library
         # Only libraries with books that should be scanned should be returned
+        # Only libraries for which we have time to register AND scan some books can be returned
         try:
-            best_library = get_best_library(libraries, total_days - current_day - 1)
+            library, library_index = get_best_library(libraries_to_signup, remaining_days)
         except NotFoundError as not_found_reason:
             print(f"Exiting loop on days: {not_found_reason}")
             break
 
         # register library
-        
+        remaining_days -= library.signup_time # We still have time to scan books thanks to gest_best_library
+        library.sidned_up = True
+        del libraries_to_signup[library_index]
+
         # plan the scanning of the best books in the library until the end of time
+        books_to_scan = library.books_set_ordered_by_score[:num_book_shippable * remaining_days]
 
         # remove the scaned books from the other libraries
+        for remaining_library in libraries_to_signup:
+            remaining_library.books_set_ordered_by_score -= books_to_scan
 
         # add the library to the results
         scanned_libraries += [
             f"{library.id} {len(library.books_to_scan)}",
-            " ".join(list(map(str, library.books_to_scan)))
+            " ".join(list(map(lambda book_score: str(book_score[0]), books_to_scan)))
         ]
 
 
     return [str(len(scanned_libraries))] + scanned_libraries
 
-    # old code, to cleen
-    ordered_libraries = []
-    newly_scanned_books = set()
-    all_scanned_books = set()
-
-    start_time = time.time()
-    library_currently_signing_up = None
-    while current_day < total_days:
-        if current_day % 100 == 0 and current_day > 0:
-            current_time = time.time()
-            remaining_time = (current_time - start_time) / (current_day) * (total_days - current_day)
-
-            print(f"Current day {current_day}/{total_days}. time remaining : {int(remaining_time / 60)} min", end="\r")
-        
-        if library_currently_signing_up is None or library_currently_signing_up.signed_up():
-            ordered_libraries = get_library_to_signup(
-                libraries.values(),
-                ordered_libraries,
-            )
-            library_currently_signing_up = ordered_libraries[-1]
-        
-        
-
-        signed_up_libraries = [lib for lib in ordered_libraries if lib.signed_up()]
-        # print(f"{len(signed_up_libraries)} libraries signed up.")
-
-        newly_scanned_books = set()
-        for signed_up_library in signed_up_libraries:
-            books_to_scan = get_books_to_scan(signed_up_library, newly_scanned_books)
-                
-            library_books = set(books_to_scan)
-            all_scanned_books |= library_books # union
-            newly_scanned_books = newly_scanned_books.union(library_books)
-
-            signed_up_library.books_to_scan += books_to_scan
-
-        if not library_currently_signing_up.signed_up():
-            # print(f"[sign up] Signing up {library_currently_signing_up}")
-            library_currently_signing_up.decrement_sign_up_time()
-        else:
-            # print("[sign up] No library to sign up.")
-            pass
-
-        current_day += 1
-
-        for lib in libraries.values():
-            lib.books = lib.books.difference(newly_scanned_books)
-
-        if current_day % 100 == 0 and current_day > 0:
-            res = []
-            non_empty_libs = 0
-            for library in ordered_libraries:
-                # assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
-                if len(library.books_to_scan) > 0:
-                    non_empty_libs += 1
-                    res.append(f"{library.id} {len(library.books_to_scan)}")
-                    res.append(" ".join(list(map(str, library.books_to_scan))))
-            res = [str(non_empty_libs)] + res
-            Path(f'output/wip.txt').write_text("\n".join(res).strip())
-
-    res = []
-    non_empty_libs = 0
-    for library in ordered_libraries:
-        # assert len(library.books_to_scan) <= len(library.books), "Too many books to scan"
-        if len(library.books_to_scan) > 0:
-            non_empty_libs += 1
-            res.append(f"{library.id} {len(library.books_to_scan)}")
-            res.append(" ".join(list(map(str, library.books_to_scan))))
-    res = [str(non_empty_libs)] + res
-    return res

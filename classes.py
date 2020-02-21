@@ -1,11 +1,16 @@
 from collections import deque
+from ordered_set import OrderedSet
 from operator import itemgetter
 
 class Library:
   def __init__(self, id, books, signup_time, num_book_shippable, book_scores):
     self.id = id
     self.books = books
-    self.books_ordered_by_score = deque(sorted([
+    self.books_ordered_by_score = OrderedSet(sorted([
+        (book_id, book_scores[book_id]) 
+        for book_id in books 
+    ], key=itemgetter(1), reverse=True))
+    self.books_set_ordered_by_score = OrderedSet(sorted([
         (book_id, book_scores[book_id]) 
         for book_id in books 
     ], key=itemgetter(1), reverse=True))
