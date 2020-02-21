@@ -28,21 +28,19 @@ def handle(lines):
         if remaining_days < next_checkpoint:
             seconds_left = (time.time() - start_time) / (total_days - remaining_days) * remaining_days
             print(f"Remaining days: {remaining_days}. Minutes left : {int(seconds_left / 60)}. "
-                    f"Score: {score}", end="\r")
+                    f"Score: {score}    ", end="\r")
             next_checkpoint -= checkpoint_steps
         # get best library
         # Only libraries with books that should be scanned should be returned
         # Only libraries for which we have time to register AND scan some books can be returned
         try:
-            library, library_index = get_best_library(libraries_to_signup, remaining_days)
+            library, libraries_to_signup = get_best_library(libraries_to_signup, remaining_days)
         except NotFoundError as not_found_reason:
             print(f"Exiting loop on days: {not_found_reason}")
             break
 
         # register library
         remaining_days -= library.signup_time # We still have time to scan books thanks to gest_best_library
-        library.sidned_up = True
-        del libraries_to_signup[library_index]
 
         # plan the scanning of the best books in the library until the end of time
         books_to_scan = library.books_set_ordered_by_score[:num_book_shippable * remaining_days]
@@ -60,5 +58,5 @@ def handle(lines):
 
     print(f"Final score : {score}")
 
-    return [str(len(scanned_libraries))] + scanned_libraries
+    return [str(int(len(scanned_libraries)/2))] + scanned_libraries
 

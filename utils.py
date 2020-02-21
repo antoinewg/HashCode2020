@@ -39,10 +39,14 @@ def get_best_library(libraries, days_left):
                     ]),
                     0
                     )
-    libraries = sorted(libraries, key=score, reverse=True)
+    library_scores = {
+            library.id: score(library) if library.signup_time < days_left else 0
+            for library in libraries
+    }
+    libraries = sorted(libraries, key=lambda library: library_scores[library.id], reverse=True)
     best_library = libraries[0]
 
     if best_library.signup_time >= days_left:
         raise NotFoundError("No library to signup in the remaining time")
 
-    return best_library, 0
+    return best_library, libraries[1:]
