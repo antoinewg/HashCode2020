@@ -1,5 +1,5 @@
 from classes import Library, NotFoundError
-from utils import get_library_to_signup
+from utils import get_best_library
 from books import get_books_to_scan
 import time
 from pathlib import Path
@@ -23,9 +23,9 @@ def handle(lines):
         # get best library
         # Only libraries with books that should be scanned should be returned
         try:
-            best_library = None
-            raise NotFoundError("No available libraries")
-        except NotFoundError:
+            best_library = get_best_library(libraries, total_days - current_day - 1)
+        except NotFoundError as not_found_reason:
+            print(f"Exiting loop on days: {not_found_reason}")
             break
 
         # register library

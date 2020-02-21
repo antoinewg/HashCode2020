@@ -1,3 +1,5 @@
+from classes import NotFoundError
+
 def get_library_to_sign_up(libraries):
   sort_libraries = sorted(libraries, key=lambda x: x.num_book_shippable * x.total_score / x.signup_time, reverse=True)
   return sort_libraries[0]
@@ -22,3 +24,6 @@ def get_library_to_signup(libraries, ordered_libraries):
     return ordered_libraries + [library_to_sign_up]
   
   return ordered_libraries
+
+def get_best_library(libraries, days_left):
+    raise NotFoundError("`get_best_library` not implemented")
