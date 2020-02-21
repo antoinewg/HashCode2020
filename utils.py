@@ -1,4 +1,5 @@
 from classes import NotFoundError
+from operator import itemgetter
 
 def get_library_to_sign_up(libraries):
   sort_libraries = sorted(libraries, key=lambda x: x.num_book_shippable * x.total_score / x.signup_time, reverse=True)
@@ -30,7 +31,15 @@ def get_best_library(libraries, days_left):
     if len(libraries) == 0:
         raise NotFoundError("No more libraries")
 
-    # TODO : sort libraries by ?
+    def score(library):
+        return sum(
+                map(itemgetter(1), 
+                    library.books_set_ordered_by_score[
+                        :library.num_book_shippable * (days_left-library.signup_time)
+                    ]),
+                    0
+                    )
+    libraries = sorted(libraries, key=score, reverse=True)
     best_library = libraries[0]
 
     if best_library.signup_time >= days_left:

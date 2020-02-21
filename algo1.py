@@ -3,6 +3,7 @@ from utils import get_best_library
 from books import get_books_to_scan
 import time
 from pathlib import Path
+from operator import itemgetter
 
 def handle(lines):
     num_books, num_libraries, total_days = list(map(int, lines[0].split()))
@@ -22,10 +23,12 @@ def handle(lines):
     next_checkpoint = remaining_days - checkpoint_steps
     scanned_libraries = []
     start_time = time.time()
+    score = 0
     while remaining_days > 0 :
         if remaining_days < next_checkpoint:
             seconds_left = (time.time() - start_time) / (total_days - remaining_days) * remaining_days
-            print(f"Remaining days: {remaining_days}. Minutes left : {seconds_left / 60}", end="\r")
+            print(f"Remaining days: {remaining_days}. Minutes left : {int(seconds_left / 60)}. "
+                    f"Score: {score}", end="\r")
             next_checkpoint -= checkpoint_steps
         # get best library
         # Only libraries with books that should be scanned should be returned
@@ -50,10 +53,12 @@ def handle(lines):
 
         # add the library to the results
         scanned_libraries += [
-            f"{library.id} {len(library.books_to_scan)}",
+            f"{library.id} {len(books_to_scan)}",
             " ".join(list(map(lambda book_score: str(book_score[0]), books_to_scan)))
         ]
+        score += sum(map(itemgetter(1), books_to_scan), 0)
 
+    print(f"Final score : {score}")
 
     return [str(len(scanned_libraries))] + scanned_libraries
 
