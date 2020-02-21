@@ -1,4 +1,4 @@
-from classes import Library
+from classes import Library, NotFoundError
 from utils import get_library_to_signup
 from books import get_books_to_scan
 import time
@@ -18,6 +18,32 @@ def handle(lines):
 
 
     current_day = 0
+    scanned_libraries = []
+    while current_day < total_days :
+        # get best library
+        # Only libraries with books that should be scanned should be returned
+        try:
+            best_library = None
+            raise NotFoundError("No available libraries")
+        except NotFoundError:
+            break
+
+        # register library
+        
+        # plan the scanning of the best books in the library until the end of time
+
+        # remove the scaned books from the other libraries
+
+        # add the library to the results
+        scanned_libraries += [
+            f"{library.id} {len(library.books_to_scan)}",
+            " ".join(list(map(str, library.books_to_scan)))
+        ]
+
+
+    return [str(len(scanned_libraries))] + scanned_libraries
+
+    # old code, to cleen
     ordered_libraries = []
     newly_scanned_books = set()
     all_scanned_books = set()

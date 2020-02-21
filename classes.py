@@ -24,3 +24,7 @@ class Library:
 
   def __repr__(self):
     return f"Library [{self.id}] {len(self.books)}/{self.num_book_shippable} {self.time_left_to_signup}/{self.signup_time}"
+
+class NotFoundError(Exception):
+    def __init__(self, message):
+        self.message=message
